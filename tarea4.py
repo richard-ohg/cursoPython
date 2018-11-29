@@ -22,8 +22,8 @@ def md5(archivo):
 			hash 
 	'''
   hash_md5 = hashlib.md5()
-  with open(archivo, "rb") as f:
-      for chunk in iter(lambda: f.read(4096), b""):
+  with open(archivo, "rb") as file:
+      for chunk in iter(lambda: file.read(4096), b""):
           hash_md5.update(chunk)
   return hash_md5.hexdigest()
 
@@ -37,8 +37,8 @@ def sha1(archivo):
 			hash 
 	'''
   hash_md5 = hashlib.sha1()
-  with open(archivo, "rb") as f:
-      for chunk in iter(lambda: f.read(4096), b""):
+  with open(archivo, "rb") as file:
+      for chunk in iter(lambda: file.read(4096), b""):
           hash_md5.update(chunk)
   return hash_md5.hexdigest()
 
@@ -51,8 +51,8 @@ def obtener_apagados_prendidos():
 	'''
   hostPrendidos=0
   hostApagados=0
-  with open(nombre_archivo,'r') as passwd:
-      root = ET.fromstring(passwd.read())
+  with open(nombre_archivo,'r') as file:
+      root = ET.fromstring(file.read())
       for a in root.findall('host'):
         if a.find('status').get('state') == "up":
           hostPrendidos += 1
@@ -73,8 +73,8 @@ def host_puertos_abiertos():
   p53=0
   p80=0
   p443=0
-  with open(nombre_archivo,'r') as passwd:
-      root = ET.fromstring(passwd.read())
+  with open(nombre_archivo,'r') as file:
+      root = ET.fromstring(file.read())
       for a in root.findall('host'):
         for x in a.findall('ports'):
           for y in x.iter('port'):
@@ -97,8 +97,8 @@ def tienen_dominio():
 
 	'''
   cont=0
-  with open(nombre_archivo,'r') as passwd:
-    root = ET.fromstring(passwd.read())
+  with open(nombre_archivo,'r') as file:
+    root = ET.fromstring(file.read())
     for a in root.findall('host'):
       for x in a.findall('hostnames'):
         for y in x.findall('hostname'):
@@ -117,8 +117,8 @@ def servidores_http():
 	honeypot=0
 	nginx=0
 	otros=0
-	with open(nombre_archivo,'r') as passwd:
-		root = ET.fromstring(passwd.read())
+	with open(nombre_archivo,'r') as file:
+		root = ET.fromstring(file.read())
 		for a in root.findall('host'):
 			for x in a.findall('ports'):
 				for y in x.iter('port'):
