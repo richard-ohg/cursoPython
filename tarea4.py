@@ -10,7 +10,6 @@ import hashlib
 
 
 nombre_archivo="nmap.xml"
-hostDominio=0
 
 
 def md5(archivo):
@@ -64,8 +63,6 @@ def obtener_apagados_prendidos():
 def host_puertos_abiertos():
   '''
 		Función para obtener el número de host que tienen los puertos 22,53,80 y 443 abiertos
-		Recibe:
-			número del puerto
 		Retorna:
 			cantidad de host de todos los puertos
 	'''
