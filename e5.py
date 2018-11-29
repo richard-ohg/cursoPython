@@ -13,7 +13,4 @@ eq3 = ['Servando Miguel','Ricardo Omar','Laura Patricia','Isaias Abraham','Oscar
 # 4) obtener una cadena con los nombres resultantes, separando los nombres con coma (reduce)
 #UNA SOLA EXPRESION
 
-#lambda lista1,lista2,lista3: lista1+lista2+lista3
-
-
 print( reduce(lambda x,y: x+","+y ,map(lambda lista: lista.upper(),filter(lambda lista: " " not in lista,(lambda lista1,lista2,lista3: lista1+lista2+lista3)(eq1,eq2,eq3)))) )
