@@ -90,6 +90,12 @@ def host_puertos_abiertos():
 
 
 def tienen_dominio():
+  '''
+		Función para saber la cantidad de host que tienen dominio
+		Retorna:
+			número de host 
+
+	'''
   cont=0
   with open(nombre_archivo,'r') as passwd:
     root = ET.fromstring(passwd.read())
@@ -105,7 +111,7 @@ def servidores_http():
 	'''
 		Función para saber qué servidor http está usando
 		Retorna
-			cantidad del servidor
+			cantidad de los diferentes servidores
 	'''
 	apache=0
 	honeypot=0
