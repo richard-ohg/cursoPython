@@ -3,8 +3,8 @@
 #UNAM-CERT
 
 #Para ejecutar
-# Archivo de usuarios y archivo de contraseñas
-#python req.py -s servidor -f -U archivo_usuarios -P archivo_password -r archivo_reporte -v (-v para modo verboso) 
+# Si se quiere varios usuarios o varias contraseñas deben de ir entre comillas y separados por espacios
+#python req.py -s servidor -U 'usuario1 usuario2' -P 'contraseña1 contraseña2' -r archivo_reporte -v (-v para modo verboso) 
 # Un usuario y una contraseña:
 #python req.py -s servidor -U usuario -P contraseña -r archivo_reporte -v (-v para modo verboso) 
 
@@ -26,16 +26,14 @@ def addOptions():
     parser.add_option('-U', '--user', dest='user', default=None, help='User that will be tested during the attack.')
     parser.add_option('-P', '--password', dest='password', default=None, help='Password that will be tested during the attack.')
     parser.add_option('-v', '--verbose',action='store_true', dest='verbose', default=False, help='Mode verbose')
-    parser.add_option('-r', '--report', dest='report', default=None, help='Bandera para indicar el archivo donde se imprimirán los resultados')
-    parser.add_option('-f', '--file',action='store_true', dest='file', default=False, help='Bandera para indicar si los usuarios y contraseñas están en un archivo ')
-    # parser.add_option('-o', '--one',action='store_true', dest='one', default=False, help='Bandera para indicar si solo se quiere un usuario y una contraseña')
+    parser.add_option('-r', '--report', dest='report', default="reporte.txt", help='Bandera para indicar el archivo donde se imprimirán los resultados')
     opts,args = parser.parse_args()
     return opts
     
 def checkOptions(options):
     if options.server is None:
         printError('Debes especificar un servidor a atacar.', True)
-# 
+
 
 def reportResults(archivo,resultados):
     with open(archivo,"w") as file:
@@ -70,37 +68,21 @@ if __name__ == '__main__':
         opts = addOptions()
         checkOptions(opts)
         url = buildURL(opts.server, port = opts.port)
-        if opts.file:
-            with open(opts.password) as passwords, open(opts.user) as users:
-                for us in users:
-                    passwords.seek(0)
-                    for pas in passwords:
-                        if opts.verbose:
-                            print("Intentando usuario: "+us[:-1]+" contraseña: "+pas[:-1])
-                            if makeRequest(url, us[:-1], pas[:-1]):
-                                resultados.append((us[:-1], pas[:-1],"Funciono"))
-                            else:
-                                resultados.append((us[:-1], pas[:-1],"No funciono"))
-                        else:
-                            if makeRequest(url, us[:-1], pas[:-1]):
-                                resultados.append((us[:-1], pas[:-1],"Funciono"))
-                            else:
-                                resultados.append((us[:-1], pas[:-1],"No funciono"))
-            reportResults(opts.report, resultados)
-        else:
-            if opts.verbose:
-                print("Intentando usuario: "+opts.user+" contraseña: "+opts.password)
-                if makeRequest(url, opts.user, opts.password):
-                    resultados.append((opts.user, opts.password,"Funciono"))
+        # print opts.user,opts.password
+        for us in opts.user.split():
+            for pas in opts.password.split():
+                if opts.verbose:
+                    print("Intentando usuario: "+us+" contraseña: "+pas)
+                    if makeRequest(url, us, pas):
+                        resultados.append((us, pas,"Funciono"))
+                    else:
+                        resultados.append((us, pas,"No funciono"))
                 else:
-                    resultados.append((opts.user, opts.password,"No funciono")) 
-            else:
-                if makeRequest(url, opts.user, opts.password):
-                    resultados.append((opts.user, opts.password,"Funciono"))
-                else:
-                    resultados.append((opts.user, opts.password,"No funciono"))
-            reportResults(opts.report, resultados)
-
+                    if makeRequest(url, us, pas):
+                        resultados.append((us, pas,"Funciono"))
+                    else:
+                        resultados.append((us, pas,"No funciono"))
+        reportResults(opts.report, resultados)
     except Exception as e:
         printError('Ocurrio un error inesperado')
         printError(e, True)
