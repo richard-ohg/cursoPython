@@ -4,6 +4,24 @@
 
 lista=[]
 
+def esPalindromo(cadena):
+	'''
+		Funcion para saber si una cadena es palindromo o no
+	'''
+	return cadena == cadena[::-1]
+
+def palindromoMasGrande(cadena):
+	palindromos=[]
+	for i in range(len(cadena)):
+		for j in range(len(cadena),0,-1):
+			if esPalindromo(cadena[i:j]):
+				if len(cadena[i:j]) > 1:
+					palindromos.append(cadena[i:j])	
+	palindromos.sort(key=len)
+	# print(palindromos)
+	return palindromos[-1]
+		
+
 def esPrimo(numero):
 	'''
 		Función para saber si un número es primo o no
@@ -49,10 +67,9 @@ def agregarPrimos(num,cantidad):
 	return lista
 
 
+palabras=['hfjfalas','andanitalavalatinanfjdsnf','dbadbsnosoj','kfsjdamigonogimajjsoso.']
 print("lista de numeros primos: ",agregarPrimos(2,7))
-
-
-
-
-
+for pal in palabras:
+	print("Palindromo mas grande : ", palindromoMasGrande(pal))
+	
 
