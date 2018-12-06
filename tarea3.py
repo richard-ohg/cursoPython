@@ -20,19 +20,22 @@ def addOptions():
 def permutaciones(lista,cantidad):
 	palabras=[]
 	perm=list(it.permutations(lista, cantidad))
+	# print(len(perm))
 	for pal in perm:
 		palabras.append("".join(pal))
 	return palabras
 
 def cambiar_min_mayus(lista):
+	lis=[]
 	for palabra in lista:
-		lis=[palabra.replace(letra,letra.upper()) for letra in palabra]
+		for letra in palabra:
+			lis.append(palabra.replace(letra,letra.upper()))
 	return lis
 
 def cambiar_letras_numeros(lista):
 	lis=[]
 	for palabra in lista:
-		if palabra in ['a','e','o']:
+		if 'a' in palabra or 'e' in palabra or 'o' in palabra :
 			for letra in palabra:
 				if letra == 'a':
 					new_string = palabra.replace(letra,'4')
@@ -64,18 +67,40 @@ if __name__ == '__main__':
 		print "Debe contener un archivo con palabras"
 		sys.exit(1)
 	palabras = leer_palabras(opts.file)
-	print len(palabras)
+	# print len(palabras)
 	with open('contrasenas.txt','w') as f:
+		for pal in palabras:
+			f.write(pal+'\n')
+		new_list = set(cambiar_min_mayus(palabras))
+		# print len(new_list)
+		for pal in new_list:
+			f.write(pal+'\n')
+		new_list = set(cambiar_letras_numeros(palabras))
+		# print len(new_list)
+		for pal in new_list:
+			f.write(pal+'\n')
 		perm = permutaciones(palabras,2)
+		# print len(perm)
 		for pal in perm:
 			f.write(pal+'\n')
-		new_list=cambiar_min_mayus(perm)
+		new_list = set(cambiar_min_mayus(perm))
+		# print len(new_list)
 		for pal in new_list:
 			f.write(pal+'\n')
-		new_list=cambiar_letras_numeros(new_list)
+		new_list = set(cambiar_letras_numeros(new_list))
+		# print len(new_list)
 		for pal in new_list:
 			f.write(pal+'\n')
-		new_list=cambiar_letras_numeros(perm)
+		perm = permutaciones(palabras,3)
+		# print len(perm)
+		for pal in perm:
+			f.write(pal+'\n')
+		new_list = set(cambiar_min_mayus(perm))
+		# print len(new_list)
+		for pal in new_list:
+			f.write(pal+'\n')
+		new_list = set(cambiar_letras_numeros(new_list))
+		# print len(new_list)
 		for pal in new_list:
 			f.write(pal+'\n')
 
